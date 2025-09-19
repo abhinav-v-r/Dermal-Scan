@@ -31,7 +31,7 @@ if uploaded_file is not None:
 
     img_np = np.array(image)
     gray = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY)
-
+    
     # Detect faces
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
 
