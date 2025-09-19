@@ -14,10 +14,7 @@ plt.title("Class Distribution")
 plt.xlabel("Class")
 plt.ylabel("Number of Images")
 plt.show()
-
-
 #Sample Images
-
 import random
 
 plt.figure(figsize=(10, 8))
