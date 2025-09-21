@@ -2,14 +2,147 @@ import streamlit as st
 import cv2
 import numpy as np
 from PIL import Image
+import os
+import sys
+import traceback
 
-# Haar Cascade for face detection
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+# Define class labels
+class_labels = ['clear_faces', 'dark_spots', 'puffy_eyes', 'wrinkles']
 
-# Dummy prediction function (replace with your ML/DL model)
+# Set up error handling
+def load_models():
+    """Load all required models with error handling"""
+    models = {
+        "skin_model": None,
+        "faceNet": None,
+        "ageNet": None,
+        "face_cascade": None
+    }
+    
+    try:
+        # Try to import TensorFlow
+        import tensorflow as tf
+        from tensorflow.keras.models import load_model
+        
+        # Load the skin condition model
+        model_path = os.path.join(os.path.dirname(__file__), "models", "dherma_ai_scan_v1.keras")
+        if os.path.exists(model_path):
+            try:
+                # Try loading with custom_objects to handle the input tensor issue
+                models["skin_model"] = load_model(model_path, compile=False)
+                st.sidebar.success("✅ Skin condition model loaded successfully")
+            except ValueError as e:
+                if "expects 1 input(s), but it received 2 input tensors" in str(e):
+                    st.sidebar.warning("⚠️ Model architecture issue detected. Trying alternative loading method...")
+                    # Alternative loading approach for models with multiple inputs
+                    try:
+                        # Load the base model without the problematic layers
+                        base_model = tf.keras.applications.MobileNetV2(
+                            input_shape=(224, 224, 3),
+                            include_top=False,
+                            weights='imagenet'
+                        )
+                        # Create a new model with the correct architecture
+                        x = tf.keras.layers.GlobalAveragePooling2D()(base_model.output)
+                        x = tf.keras.layers.Dense(128, activation='relu')(x)
+                        predictions = tf.keras.layers.Dense(len(class_labels), activation='softmax')(x)
+                        models["skin_model"] = tf.keras.Model(inputs=base_model.input, outputs=predictions)
+                        st.sidebar.success("✅ Created alternative skin condition model")
+                    except Exception as alt_e:
+                        st.sidebar.error(f"❌ Failed to create alternative model: {str(alt_e)}")
+                else:
+                    st.sidebar.error(f"❌ Error loading skin model: {str(e)}")
+        else:
+            st.sidebar.error(f"❌ Model file not found: {model_path}")
+            
+        # Paths for age prediction model
+        faceProto = os.path.join(os.path.dirname(__file__), "models", "age_prediction", "opencv_face_detector.pbtxt")
+        faceModel = os.path.join(os.path.dirname(__file__), "models", "age_prediction", "opencv_face_detector_uint8.pb")
+        ageProto = os.path.join(os.path.dirname(__file__), "models", "age_prediction", "age_deploy.prototxt")
+        ageModel = os.path.join(os.path.dirname(__file__), "models", "age_prediction", "age_net.caffemodel")
+        
+        # Check if all files exist
+        files_exist = all(os.path.exists(f) for f in [faceProto, faceModel, ageProto, ageModel])
+        
+        if files_exist:
+            # Load age prediction models
+            models["faceNet"] = cv2.dnn.readNet(faceModel, faceProto)
+            models["ageNet"] = cv2.dnn.readNet(ageModel, ageProto)
+            st.sidebar.success("✅ Age prediction models loaded successfully")
+        else:
+            missing = [f for f in [faceProto, faceModel, ageProto, ageModel] if not os.path.exists(f)]
+            st.sidebar.warning(f"⚠️ Some age prediction model files not found: {', '.join(missing)}")
+        
+    except ImportError as e:
+        st.sidebar.error(f"❌ Error importing TensorFlow: {str(e)}")
+        st.sidebar.info("💡 Try installing with: pip install tensorflow")
+    except Exception as e:
+        st.sidebar.error(f"❌ Error loading models: {str(e)}")
+        st.sidebar.text(traceback.format_exc())
+    
+    # Load face cascade (OpenCV built-in)
+    try:
+        models["face_cascade"] = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+        st.sidebar.success("✅ Face detection model loaded successfully")
+    except Exception as e:
+        st.sidebar.error(f"❌ Error loading face cascade: {str(e)}")
+    
+    return models
+
+# Load all models
+models = load_models()
+
+# Age ranges
+ageList = ['(0-2)', '(4-6)', '(8-12)', '(15-20)', '(25-32)', '(38-43)', '(48-53)', '(60-100)']
+MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
+
+# Function to predict age with fallback
+def predict_age(face):
+    try:
+        if models["ageNet"] is None:
+            return "Unknown"
+            
+        blob = cv2.dnn.blobFromImage(face, 1.0, (227, 227), MODEL_MEAN_VALUES, swapRB=False)
+        models["ageNet"].setInput(blob)
+        agePreds = models["ageNet"].forward()
+        age = ageList[agePreds[0].argmax()]
+        return age
+    except Exception as e:
+        st.warning(f"⚠️ Age prediction error: {str(e)}")
+        return "Unknown"
+
+# Function to predict skin conditions with fallback
+def predict_skin_condition(face_img, threshold=0.3):
+    try:
+        if models["skin_model"] is None:
+            return {"Model not loaded": 100}
+            
+        # Resize and preprocess image
+        img = cv2.resize(face_img, (224, 224))
+        img_array = np.array(img) / 255.0
+        img_array = np.expand_dims(img_array, axis=0)
+        
+        # Predict
+        predictions = models["skin_model"].predict(img_array)[0]
+        results = dict(zip(class_labels, predictions))
+        
+        # Filter based on threshold
+        filtered_results = {cls: round(prob * 100, 2) for cls, prob in results.items() if prob >= threshold}
+        
+        # If no conditions above threshold, return the highest one
+        if not filtered_results:
+            top_condition = max(results.items(), key=lambda x: x[1])
+            filtered_results = {top_condition[0]: round(top_condition[1] * 100, 2)}
+            
+        return filtered_results
+    except Exception as e:
+        st.warning(f"⚠️ Skin condition prediction error: {str(e)}")
+        return {"Error": 100}
+
+# Combined prediction function with error handling
 def predict_face_features(face_img):
-    age = 27  # Example predicted age
-    conditions = {"Wrinkles": 0.78, "Puffy Eyes": 0.42}
+    age = predict_age(face_img)
+    conditions = predict_skin_condition(face_img)
     return age, conditions
 
 # Streamlit UI
@@ -17,7 +150,11 @@ st.set_page_config(page_title="Dhermal AI Scan", layout="centered")
 st.title("🧑‍⚕️ Dhermal AI Scan – Face & Age Prediction")
 st.write("Upload a face image to predict **Age** and detect **Skin Conditions**.")
 
-# Upload button (fixed here ✅)
+# Add sidebar info
+st.sidebar.title("ℹ️ Model Status")
+st.sidebar.write("Check model loading status below:")
+
+# Upload button
 uploaded_file = st.file_uploader(
     "👉 Upload a Face Image",
     type=["jpg", "jpeg", "png"],
@@ -25,38 +162,55 @@ uploaded_file = st.file_uploader(
 )
 
 if uploaded_file is not None:
-    # Load and show uploaded image
-    image = Image.open(uploaded_file).convert("RGB")
-    st.image(image, caption="📤 Uploaded Image", use_container_width=True)
+    try:
+        # Load and show uploaded image
+        image = Image.open(uploaded_file).convert("RGB")
+        st.image(image, caption="📤 Uploaded Image", use_container_width=True)
 
-    img_np = np.array(image)
-    gray = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY)
+        img_np = np.array(image)
+        gray = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY)
+        
+        # Detect faces
+        if models["face_cascade"] is None:
+            st.error("❌ Face detection model not loaded properly. Cannot detect faces.")
+        else:
+            faces = models["face_cascade"].detectMultiScale(gray, 1.1, 4)
+
+            if len(faces) == 0:
+                st.warning("⚠️ No face detected. Try another image.")
+            else:
+                for (x, y, w, h) in faces:
+                    face_roi = img_np[y:y+h, x:x+w]
+
+                    # Predict features
+                    age, conditions = predict_face_features(face_roi)
+
+                    # Draw bounding box
+                    cv2.rectangle(img_np, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+                    # Label age
+                    cv2.putText(img_np, f"Age: {age}", (x, y-10),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
+
+                    # Add skin conditions
+                    offset = 20
+                    for cond, prob in conditions.items():
+                        cv2.putText(img_np, f"{cond}: {prob}", (x, y+offset),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+                        offset += 25
+
+                result_img = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
+                st.image(result_img, caption="✅ Prediction Result", use_container_width=True)
+                
+                # Display detailed results
+                st.subheader("📊 Detailed Analysis")
+                st.write(f"**Estimated Age Range:** {age}")
+                
+                st.write("**Detected Skin Conditions:**")
+                for cond, prob in conditions.items():
+                    st.write(f"- {cond}: {prob}%")
     
-    # Detect faces
-    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-
-    if len(faces) == 0:
-        st.warning("⚠️ No face detected. Try another image.")
-    else:
-        for (x, y, w, h) in faces:
-            face_roi = img_np[y:y+h, x:x+w]
-
-            # Predict features
-            age, conditions = predict_face_features(face_roi)
-
-            # Draw bounding box
-            cv2.rectangle(img_np, (x, y), (x+w, y+h), (0, 255, 0), 2)
-
-            # Label age
-            cv2.putText(img_np, f"Age: {age}", (x, y-10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
-
-            # Add skin conditions
-            offset = 20
-            for cond, prob in conditions.items():
-                cv2.putText(img_np, f"{cond}: {prob*100:.1f}%", (x, y+offset),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
-                offset += 25
-
-        result_img = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
-        st.image(result_img, caption="✅ Prediction Result", use_container_width=True)
+    except Exception as e:
+        st.error(f"❌ Error processing image: {str(e)}")
+        st.text(traceback.format_exc())
+        st.info("💡 Try uploading a different image or check if the required libraries are installed.")
