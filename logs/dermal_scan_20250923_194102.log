@@ -1,0 +1,25 @@
+2025-09-23 19:41:15,574 - WARNING - From F:\python__\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-09-23 19:42:19,714 - INFO - Processing uploaded image
+2025-09-23 19:42:22,653 - INFO - Prediction: Age=(8-12), Conditions={'clear_faces': np.float32(32.88), 'wrinkles': np.float32(57.51)}
+2025-09-23 19:43:29,559 - INFO - Testing with sample image: man2.jpg
+2025-09-23 19:43:29,562 - INFO - Processing uploaded image
+2025-09-23 19:43:32,431 - INFO - Prediction: Age=(8-12), Conditions={'wrinkles': np.float32(64.58)}
+2025-09-23 19:43:45,816 - INFO - Testing with sample image: man2.jpg
+2025-09-23 19:43:45,818 - INFO - Processing sample image: sample_images\man2.jpg
+2025-09-23 19:43:47,985 - INFO - Prediction: Age=(25-32), Conditions={'dark_spots': np.float32(34.13), 'wrinkles': np.float32(32.03)}
+2025-09-23 19:44:02,425 - INFO - Testing with sample image: kid1.jpg
+2025-09-23 19:44:02,426 - INFO - Processing sample image: sample_images\kid1.jpg
+2025-09-23 19:44:04,590 - INFO - Prediction: Age=(4-6), Conditions={'wrinkles': np.float32(29.9)}
+2025-09-23 19:44:17,170 - INFO - Testing with sample image: girl1.jpg
+2025-09-23 19:44:17,171 - INFO - Processing sample image: sample_images\girl1.jpg
+2025-09-23 19:44:26,222 - INFO - Testing with sample image: man2.jpg
+2025-09-23 19:44:26,222 - INFO - Processing sample image: sample_images\man2.jpg
+2025-09-23 19:44:28,375 - WARNING - 5 out of the last 5 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x000001C3C0859DA0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+2025-09-23 19:44:28,433 - INFO - Prediction: Age=(25-32), Conditions={'dark_spots': np.float32(59.09)}
+2025-09-23 19:44:29,680 - INFO - Testing with sample image: man1.jpg
+2025-09-23 19:44:29,681 - INFO - Processing sample image: sample_images\man1.jpg
+2025-09-23 19:44:38,423 - INFO - Testing with sample image: girl2.jpg
+2025-09-23 19:44:38,425 - INFO - Processing sample image: sample_images\girl2.jpg
+2025-09-23 19:44:40,536 - WARNING - 6 out of the last 6 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x000001C3D11C4040> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+2025-09-23 19:44:40,599 - INFO - Prediction: Age=(4-6), Conditions={'dark_spots': np.float32(60.91)}

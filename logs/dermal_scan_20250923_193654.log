@@ -1,0 +1,12 @@
+2025-09-23 19:37:07,446 - WARNING - From F:\python__\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-09-23 19:37:29,647 - INFO - Processing uploaded image
+2025-09-23 19:37:39,076 - INFO - Prediction: Age=(25-32), Conditions={'clear_faces': np.float32(55.26)}
+2025-09-23 19:37:40,974 - INFO - Prediction: Age=(8-12), Conditions={'wrinkles': np.float32(33.69)}
+2025-09-23 19:37:42,195 - INFO - Prediction: Age=(25-32), Conditions={'clear_faces': np.float32(62.82)}
+2025-09-23 19:37:42,958 - INFO - Prediction: Age=(25-32), Conditions={'clear_faces': np.float32(75.16)}
+2025-09-23 19:37:43,879 - INFO - Prediction: Age=(25-32), Conditions={'clear_faces': np.float32(62.03)}
+2025-09-23 19:37:44,518 - INFO - Prediction: Age=(25-32), Conditions={'clear_faces': np.float32(35.51), 'puffy_eyes': np.float32(36.31)}
+2025-09-23 19:37:45,387 - INFO - Prediction: Age=(25-32), Conditions={'clear_faces': np.float32(36.74), 'wrinkles': np.float32(31.85)}
+2025-09-23 19:37:46,073 - INFO - Prediction: Age=(25-32), Conditions={'clear_faces': np.float32(48.3)}
+2025-09-23 19:37:46,586 - INFO - Prediction: Age=(25-32), Conditions={'clear_faces': np.float32(42.85), 'puffy_eyes': np.float32(32.56)}

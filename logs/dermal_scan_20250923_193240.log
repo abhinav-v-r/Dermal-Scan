@@ -1,0 +1,20 @@
+2025-09-23 19:33:10,030 - WARNING - From F:\python__\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-09-23 19:33:33,623 - INFO - Testing with sample image: man1.jpg
+2025-09-23 19:33:33,624 - INFO - Processing sample image: sample_images\man1.jpg
+2025-09-23 19:33:43,695 - INFO - Testing with sample image: man2.jpg
+2025-09-23 19:33:43,697 - INFO - Processing sample image: sample_images\man2.jpg
+2025-09-23 19:33:49,059 - INFO - Prediction: Age=(25-32), Conditions={'dark_spots': np.float32(63.52)}
+2025-09-23 19:33:55,611 - INFO - Testing with sample image: man2.jpg
+2025-09-23 19:33:55,615 - INFO - Processing uploaded image
+2025-09-23 19:33:58,417 - INFO - Prediction: Age=(4-6), Conditions={'puffy_eyes': np.float32(55.17)}
+2025-09-23 19:33:58,860 - INFO - Prediction: Age=(60-100), Conditions={'dark_spots': np.float32(34.89), 'puffy_eyes': np.float32(30.52)}
+2025-09-23 19:34:40,612 - INFO - Testing with sample image: man2.jpg
+2025-09-23 19:34:40,613 - INFO - Processing uploaded image
+2025-09-23 19:34:50,389 - INFO - Testing with sample image: man2.jpg
+2025-09-23 19:34:50,390 - INFO - Processing uploaded image
+2025-09-23 19:34:52,711 - INFO - Prediction: Age=(4-6), Conditions={'puffy_eyes': np.float32(53.12)}
+2025-09-23 19:34:53,061 - INFO - Prediction: Age=(4-6), Conditions={'dark_spots': np.float32(43.61)}
+2025-09-23 19:35:07,367 - INFO - Testing with sample image: man2.jpg
+2025-09-23 19:35:07,368 - INFO - Processing uploaded image
+2025-09-23 19:35:09,938 - INFO - Prediction: Age=(25-32), Conditions={'dark_spots': np.float32(63.52)}

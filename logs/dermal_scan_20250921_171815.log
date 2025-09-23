@@ -1,0 +1,5 @@
+2025-09-21 17:18:28,649 - WARNING - From F:\python__\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-09-21 17:18:45,077 - INFO - Processing uploaded image
+2025-09-21 17:18:48,438 - INFO - Prediction: Age=(4-6), Conditions={'dark_spots': np.float32(38.55)}
+2025-09-21 17:18:48,827 - INFO - Prediction: Age=(4-6), Conditions={'dark_spots': np.float32(40.85), 'wrinkles': np.float32(36.89)}

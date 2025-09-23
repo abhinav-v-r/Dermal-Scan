@@ -5,9 +5,42 @@ from PIL import Image
 import os
 import sys
 import traceback
+import pandas as pd
+import io
+import base64
+import csv
+import datetime
+import logging
 
 # Define class labels
 class_labels = ['clear_faces', 'dark_spots', 'puffy_eyes', 'wrinkles']
+
+# Set up logging
+log_dir = os.path.join(os.path.dirname(__file__), "logs")
+os.makedirs(log_dir, exist_ok=True)
+log_file = os.path.join(log_dir, f"dermal_scan_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+logging.basicConfig(
+    filename=log_file,
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+# Helper functions for export
+def get_csv_download_link(df, filename="prediction_results.csv"):
+    """Generate a download link for a CSV file from a dataframe"""
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="{filename}">Download CSV Results</a>'
+    return href
+
+def get_image_download_link(img, filename="annotated_image.jpg", text="Download Annotated Image"):
+    """Generate a download link for an image"""
+    buffered = io.BytesIO()
+    img_pil = Image.fromarray(img)
+    img_pil.save(buffered, format="JPEG")
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+    href = f'<a href="data:image/jpeg;base64,{img_str}" download="{filename}">{text}</a>'
+    return href
 
 # Set up error handling
 def load_models():
@@ -154,6 +187,24 @@ st.write("Upload a face image to predict **Age** and detect **Skin Conditions**.
 st.sidebar.title("ℹ️ Model Status")
 st.sidebar.write("Check model loading status below:")
 
+# Add sample images section in sidebar
+st.sidebar.markdown("---")
+st.sidebar.subheader("🧪 Test with Sample Images")
+sample_dir = os.path.join(os.path.dirname(__file__), "sample_images")
+if os.path.exists(sample_dir):
+    sample_images = [f for f in os.listdir(sample_dir) if f.endswith(('.jpg', '.jpeg', '.png'))]
+    if sample_images:
+        selected_sample = st.sidebar.selectbox(
+            "Select a sample image to test:",
+            ["None"] + sample_images
+        )
+        
+        if selected_sample != "None":
+            st.sidebar.success(f"Using sample image: {selected_sample}")
+            logging.info(f"Testing with sample image: {selected_sample}")
+else:
+    st.sidebar.warning("Sample images directory not found")
+
 # Upload button
 uploaded_file = st.file_uploader(
     "👉 Upload a Face Image",
@@ -161,11 +212,27 @@ uploaded_file = st.file_uploader(
     accept_multiple_files=False
 )
 
+# Process either uploaded file or selected sample
+image_to_process = None
+
 if uploaded_file is not None:
+    image_to_process = uploaded_file
+    logging.info(f"Processing uploaded image")
+elif 'selected_sample' in locals() and selected_sample != "None":
+    sample_path = os.path.join(sample_dir, selected_sample)
+    if os.path.exists(sample_path):
+        image_to_process = sample_path
+        logging.info(f"Processing sample image: {sample_path}")
+
+if image_to_process is not None:
     try:
-        # Load and show uploaded image
-        image = Image.open(uploaded_file).convert("RGB")
-        st.image(image, caption="📤 Uploaded Image", use_container_width=True)
+        # Load and show image (either uploaded or sample)
+        if isinstance(image_to_process, str):  # Sample image path
+            image = Image.open(image_to_process).convert("RGB")
+            st.image(image, caption=f"📤 Sample Image: {os.path.basename(image_to_process)}", use_container_width=True)
+        else:  # Uploaded file
+            image = Image.open(image_to_process).convert("RGB")
+            st.image(image, caption="📤 Uploaded Image", use_container_width=True)
 
         img_np = np.array(image)
         gray = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY)
@@ -174,12 +241,22 @@ if uploaded_file is not None:
         if models["face_cascade"] is None:
             st.error("❌ Face detection model not loaded properly. Cannot detect faces.")
         else:
-            faces = models["face_cascade"].detectMultiScale(gray, 1.1, 4)
+            # Improved face detection with stricter parameters
+            # Increased scale factor and min neighbors to reduce false positives
+            faces = models["face_cascade"].detectMultiScale(gray, 1.2, 6, minSize=(100, 100))
 
             if len(faces) == 0:
-                st.warning("⚠️ No face detected. Try another image.")
+                st.warning("⚠️ No face detected. Try another image with a clearer face.")
             else:
-                for (x, y, w, h) in faces:
+                # Sort faces by area (largest first) and only process the largest face
+                faces = sorted(faces, key=lambda x: x[2] * x[3], reverse=True)
+                
+                # Only process the largest face (most likely the main subject)
+                (x, y, w, h) = faces[0]
+                
+                # Ensure the detected region has reasonable face proportions
+                aspect_ratio = w / h
+                if 0.5 <= aspect_ratio <= 1.5 and w >= 100 and h >= 100:
                     face_roi = img_np[y:y+h, x:x+w]
 
                     # Predict features
@@ -191,6 +268,29 @@ if uploaded_file is not None:
                     # Label age
                     cv2.putText(img_np, f"Age: {age}", (x, y-10),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
+                    
+                    # Log the prediction
+                    logging.info(f"Prediction: Age={age}, Conditions={conditions}")
+                    
+                    # Create dataframe for CSV export
+                    results_df = pd.DataFrame({
+                        'Timestamp': [datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")],
+                        'Age': [age],
+                        'Clear_Skin': [f"{conditions.get('clear_faces', 0):.2f}%"],
+                        'Dark_Spots': [f"{conditions.get('dark_spots', 0):.2f}%"],
+                        'Puffy_Eyes': [f"{conditions.get('puffy_eyes', 0):.2f}%"],
+                        'Wrinkles': [f"{conditions.get('wrinkles', 0):.2f}%"]
+                    })
+                    
+                    # Add export section
+                    st.subheader("📊 Export Results")
+                    col1, col2 = st.columns(2)
+                    
+                    with col1:
+                        st.markdown(get_image_download_link(img_np), unsafe_allow_html=True)
+                    
+                    with col2:
+                        st.markdown(get_csv_download_link(results_df), unsafe_allow_html=True)
 
                     # Add skin conditions
                     offset = 20
@@ -198,7 +298,10 @@ if uploaded_file is not None:
                         cv2.putText(img_np, f"{cond}: {prob}", (x, y+offset),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
                         offset += 25
-
+                else:
+                    st.warning("⚠️ The detected region doesn't appear to be a valid face. Please try another image.")
+                
+                # Convert and display the result image regardless of face validation
                 result_img = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
                 st.image(result_img, caption="✅ Prediction Result", use_container_width=True)
                 
