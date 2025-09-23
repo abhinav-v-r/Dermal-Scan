@@ -263,11 +263,11 @@ if image_to_process is not None:
                     age, conditions = predict_face_features(face_roi)
 
                     # Draw bounding box
-                    cv2.rectangle(img_np, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                    cv2.rectangle(img_np, (x, y), (x+w, y+h), (0, 255, 0), 3)
 
-                    # Label age
-                    cv2.putText(img_np, f"Age: {age}", (x, y-10),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
+                    # Label age with larger font size (increased from 0.8 to 1.5)
+                    cv2.putText(img_np, f"Age: {age}", (x, y-20),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 0, 0), 3)
                     
                     # Log the prediction
                     logging.info(f"Prediction: Age={age}, Conditions={conditions}")
@@ -292,11 +292,11 @@ if image_to_process is not None:
                     with col2:
                         st.markdown(get_csv_download_link(results_df), unsafe_allow_html=True)
 
-                    # Add skin conditions
-                    offset = 20
+                    # Add skin conditions with larger font size (increased from 0.6 to 1.2)
+                    offset = 40  # Increased offset for better spacing
                     for cond, prob in conditions.items():
                         cv2.putText(img_np, f"{cond}: {prob}", (x, y+offset),
-                                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+                                    cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 3)
                         offset += 25
                 else:
                     st.warning("⚠️ The detected region doesn't appear to be a valid face. Please try another image.")
