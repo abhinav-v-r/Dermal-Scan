@@ -1,0 +1,23 @@
+2025-09-23 20:46:19,984 - WARNING - Could not transfer weights: Layer "dense_3" expects 1 input(s), but it received 2 input tensors. Inputs received: [<KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_485>, <KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_486>]
+2025-09-23 20:46:21,110 - INFO - Model loaded successfully from models\dherma_ai_scan_v1.keras
+2025-09-23 20:46:22,422 - WARNING - From F:\python__\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-09-23 20:47:49,491 - WARNING - Could not transfer weights: Layer "dense_3" expects 1 input(s), but it received 2 input tensors. Inputs received: [<KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_485>, <KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_486>]
+2025-09-23 20:47:49,492 - INFO - Model loaded successfully from models\dherma_ai_scan_v1.keras
+2025-09-23 20:47:50,255 - INFO - Processing uploaded image
+2025-09-23 20:48:08,551 - INFO - Prediction: Age=(25-32), Conditions={'clear_faces': np.float32(25.0)}
+2025-09-23 20:48:37,079 - WARNING - Could not transfer weights: Layer "dense_3" expects 1 input(s), but it received 2 input tensors. Inputs received: [<KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_485>, <KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_486>]
+2025-09-23 20:48:37,080 - INFO - Model loaded successfully from models\dherma_ai_scan_v1.keras
+2025-09-23 20:49:02,527 - WARNING - Could not transfer weights: Layer "dense_3" expects 1 input(s), but it received 2 input tensors. Inputs received: [<KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_485>, <KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_486>]
+2025-09-23 20:49:02,528 - INFO - Model loaded successfully from models\dherma_ai_scan_v1.keras
+2025-09-23 20:49:03,300 - INFO - Processing uploaded image
+2025-09-23 20:49:32,222 - WARNING - Could not transfer weights: Layer "dense_3" expects 1 input(s), but it received 2 input tensors. Inputs received: [<KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_485>, <KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_486>]
+2025-09-23 20:49:32,223 - INFO - Model loaded successfully from models\dherma_ai_scan_v1.keras
+2025-09-23 20:49:32,964 - INFO - Processing uploaded image
+2025-09-23 20:49:54,566 - INFO - Prediction: Age=(60-100), Conditions={'clear_faces': np.float32(25.0)}
+2025-09-23 20:50:13,958 - WARNING - Could not transfer weights: Layer "dense_3" expects 1 input(s), but it received 2 input tensors. Inputs received: [<KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_485>, <KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_486>]
+2025-09-23 20:50:13,959 - INFO - Model loaded successfully from models\dherma_ai_scan_v1.keras
+2025-09-23 20:50:45,359 - WARNING - Could not transfer weights: Layer "dense_3" expects 1 input(s), but it received 2 input tensors. Inputs received: [<KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_485>, <KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_486>]
+2025-09-23 20:50:45,360 - INFO - Model loaded successfully from models\dherma_ai_scan_v1.keras
+2025-09-23 20:50:46,108 - INFO - Processing uploaded image
+2025-09-23 20:51:07,936 - INFO - Prediction: Age=(38-43), Conditions={'clear_faces': np.float32(25.0)}

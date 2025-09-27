@@ -1,0 +1,13 @@
+2025-09-25 21:41:16,232 - WARNING - Could not transfer weights: Layer dense weight shape (1024, 128) is not compatible with provided weight shape (1024, 512).
+2025-09-25 21:41:17,631 - INFO - Model loaded successfully from models\dherma_ai_scan_v1.h5
+2025-09-25 21:41:19,610 - WARNING - From F:\python__\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-09-25 21:50:54,456 - WARNING - Could not transfer weights: Layer dense weight shape (1024, 128) is not compatible with provided weight shape (1024, 512).
+2025-09-25 21:50:54,457 - INFO - Model loaded successfully from models\dherma_ai_scan_v1.h5
+2025-09-25 21:50:54,787 - INFO - Processing uploaded image
+2025-09-25 21:50:55,647 - INFO - Image shape: (1, 224, 224, 3), Range: [-1.0, 0.9843137264251709]
+2025-09-25 21:51:02,446 - INFO - Prediction: Age=(4-6), Conditions={'dark_spots': np.float32(25.31)}
+2025-09-25 21:52:31,105 - WARNING - Could not transfer weights: Layer dense weight shape (1024, 128) is not compatible with provided weight shape (1024, 512).
+2025-09-25 21:52:31,808 - ERROR - Error loading model: pop from empty list
+2025-09-25 21:52:32,209 - INFO - Processing uploaded image
+2025-09-25 21:52:45,071 - WARNING - Could not transfer weights: Layer dense weight shape (1024, 128) is not compatible with provided weight shape (1024, 512).

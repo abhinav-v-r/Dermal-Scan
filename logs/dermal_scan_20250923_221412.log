@@ -1,0 +1,9 @@
+2025-09-23 22:14:33,729 - WARNING - Could not transfer weights: Layer "dense_3" expects 1 input(s), but it received 2 input tensors. Inputs received: [<KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_485>, <KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_486>]
+2025-09-23 22:14:35,063 - INFO - Model loaded successfully from models\dherma_ai_scan_v1.keras
+2025-09-23 22:14:37,275 - WARNING - From F:\python__\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-09-23 22:15:01,937 - WARNING - Could not transfer weights: Layer "dense_3" expects 1 input(s), but it received 2 input tensors. Inputs received: [<KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_485>, <KerasTensor shape=(None, 7, 7, 1280), dtype=float32, sparse=False, ragged=False, name=keras_tensor_486>]
+2025-09-23 22:15:01,945 - INFO - Model loaded successfully from models\dherma_ai_scan_v1.keras
+2025-09-23 22:15:03,232 - INFO - Processing uploaded image
+2025-09-23 22:15:03,849 - INFO - Image shape: (1, 224, 224, 3), Range: [-1.0, 1.0]
+2025-09-23 22:15:21,690 - INFO - Prediction: Age=(25-32), Conditions={'clear_faces': np.float32(25.0)}
