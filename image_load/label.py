@@ -38,7 +38,7 @@ def draw_labels_on_image(image_np, age, features, face_cascade):
     # Colors
     box_color = (0, 255, 0)     #green  
     age_color = (255, 165, 0)  #orange
-    feature_color = (255,255,255)   #white
+    feature_color = (255,0,0)   
 
     # Draw bounding box
     cv2.rectangle(

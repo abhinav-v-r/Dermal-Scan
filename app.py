@@ -45,6 +45,7 @@ def main():
         face_cascade, age_model, feature_model = load_models_and_cascade()
     
     st.title("🧑‍⚕️ DermalScan AI") 
+    st.sidebar.success("✅ Face detection model loaded successfully")
     st.markdown("Analyze facial skin conditions and agewith AI-powered classification.")
     st.markdown("Upload an clear image of your face to get accurate results.")
 
@@ -65,6 +66,8 @@ def main():
         face_image = preprocess.bytes_to_image(img_bytes)  # BGR (224x224)
     except Exception as e:
         st.error(f"Face preprocessing failed: {str(e)}")
+        st.sidebar.error(f"❌ Error Preprocessing Image: {str(e)}")
+        st.sidebar.info("💡 Try again with a clear image of your face.")
         return
 
     st.image(cv2.cvtColor(full_image, cv2.COLOR_BGR2RGB),

@@ -43,6 +43,7 @@ def get_image_download_link(img, filename="annotated_image.jpg", text="Download 
     return href
 
 # Set up error handling
+@st.cache_resource
 def load_models():
     """Load all required models with error handling"""
     models = {
@@ -169,15 +170,15 @@ def load_models():
         
     except ImportError as e:
         st.sidebar.error(f"❌ Error importing TensorFlow: {str(e)}")
-        st.sidebar.info("💡 Try installing with: pip install tensorflow")
+       
     except Exception as e:
-        st.sidebar.error(f"❌ Error loading models: {str(e)}")
+       
         st.sidebar.text(traceback.format_exc())
     
     # Load face cascade (OpenCV built-in)
     try:
         models["face_cascade"] = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-        st.sidebar.success("✅ Face detection model loaded successfully")
+       
     except Exception as e:
         st.sidebar.error(f"❌ Error loading face cascade: {str(e)}")
     
