@@ -90,10 +90,26 @@ def main():
     # Display predictions
     # ==============================
     st.subheader("🔍 Prediction Results")
-    st.write(f"**Predicted Age:** {age:.1f} years")
+    age_range = label.get_age_range(age)
+    st.write(f"**Predicted Age:** {age:.1f} years (Range: {age_range})")
     st.write("**📊 Detailed Probabilities**")
     for feat, prob in features.items():
         st.write(f"- {feat}: {prob*100:.1f}%")
+    
+    # Find the most prevalent skin condition (excluding clear_face)
+    skin_conditions = {k: v for k, v in features.items() if k != "clear_face"}
+    if skin_conditions:
+        most_prevalent = max(skin_conditions.items(), key=lambda x: x[1])
+        most_prevalent_condition = most_prevalent[0]
+        most_prevalent_percentage = most_prevalent[1] * 100
+        
+        # Only show remedies if the condition has a significant percentage
+        if most_prevalent_percentage >= 5.0:
+            st.write("---")
+            st.write("**💡 Recommended Home Remedies**")
+            remedies = label.get_home_remedies(most_prevalent_condition)
+            st.markdown(remedies)
+    
     st.image(cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB),
              caption="Annotated Output", use_container_width=True)
 
@@ -112,8 +128,8 @@ def main():
         )
 
     # Predictions CSV (raw string)
-    csv_header = "age," + ",".join(features.keys())
-    csv_values = [f"{age:.1f}"] + [f"{prob*100:.1f}%" for prob in features.values()]
+    csv_header = "age,age_range," + ",".join(features.keys())
+    csv_values = [f"{age:.1f}", f"{age_range}"] + [f"{prob*100:.1f}%" for prob in features.values()]
     csv_row = ",".join(csv_values)
     csv_text = csv_header + "\n" + csv_row
 
