@@ -103,12 +103,11 @@ def main():
         most_prevalent_condition = most_prevalent[0]
         most_prevalent_percentage = most_prevalent[1] * 100
         
-        # Only show remedies if the condition has a significant percentage
-        if most_prevalent_percentage >= 5.0:
-            st.write("---")
-            st.write("**💡 Recommended Home Remedies**")
-            remedies = label.get_home_remedies(most_prevalent_condition)
-            st.markdown(remedies)
+        # Always show remedies for the most prevalent condition
+        st.write("---")
+        st.write("**💡 Recommended Home Remedies**")
+        remedies = label.get_home_remedies(most_prevalent_condition)
+        st.markdown(remedies)
     
     st.image(cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB),
              caption="Annotated Output", use_container_width=True)
@@ -121,7 +120,7 @@ def main():
     success, img_encoded = cv2.imencode(".png", cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB))
     if success:
         st.download_button(
-            label="Download Annotated Image",
+            label="🎬Download Annotated Image",
             data=img_encoded.tobytes(),
             file_name="annotated.png",
             mime="image/png"
@@ -134,7 +133,7 @@ def main():
     csv_text = csv_header + "\n" + csv_row
 
     st.download_button(
-        label="Download Predictions CSV",
+        label="📊Download Predictions CSV",
         data=csv_text,
         file_name="predictions.csv",
         mime="text/csv"

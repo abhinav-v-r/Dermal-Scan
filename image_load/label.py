@@ -41,15 +41,10 @@ def draw_labels_on_image(image_np, age, features, face_cascade):
     Returns:
         np.ndarray: Annotated image with bounding box, age, and features.
     """
-    # Add padding so labels don’t overlap image content
-    top_pad, bottom_pad, left_pad, right_pad = 70, 150, 50, 50
-    output_image = cv2.copyMakeBorder(
-        image_np,
-        top_pad, bottom_pad, left_pad, right_pad,
-        cv2.BORDER_CONSTANT, value=[0, 0, 0]
-    )
-
-    # Detect face on padded image
+    # Create a copy of the original image
+    output_image = image_np.copy()
+    
+    # Detect face on the image
     gray_image = cv2.cvtColor(output_image, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5)
 
@@ -60,37 +55,55 @@ def draw_labels_on_image(image_np, age, features, face_cascade):
     # Take first detected face
     x, y, w, h = faces[0]
     font = cv2.FONT_HERSHEY_SIMPLEX
-    font_scale, thickness = 0.6, 2
+    
+    # Increased font size and thickness
+    font_scale = 1.0  # Increased from 0.6
+    thickness = 2
+    box_thickness = 3  # Increased from 2
 
     # Colors
-    box_color = (0, 255, 0)     #green  
-    age_color = (255, 255, 255)  #orange
-    feature_color = (255, 255, 0)
+    box_color = (0, 255, 0)     # green  
+    age_color = (255, 255, 255)  # white
+    feature_color = (255, 255, 0)  # yellow
 
-    # Draw bounding box
+    # Draw bounding box with increased thickness
     cv2.rectangle(
         output_image,
         (x, y),
         (x + w, y + h),
         box_color,
-        thickness
+        box_thickness
     )
 
-    # Draw age label
+    # Draw age label with background for better visibility
     age_range = get_age_range(age)
     age_text = f"Age: {age:.1f} years ({age_range})"
-    cv2.putText(output_image, age_text, (x, y - 10), font, font_scale, age_color, thickness)
+    
+    # Add background rectangle for text visibility
+    (text_width, text_height), _ = cv2.getTextSize(age_text, font, font_scale, thickness)
+    cv2.rectangle(output_image, (x, y - text_height - 15), (x + text_width + 10, y), (0, 0, 0), -1)
+    cv2.putText(output_image, age_text, (x + 5, y - 10), font, font_scale, age_color, thickness)
 
-    # Draw feature labels
-    start_y_features = y + h + 25
+    # Draw feature labels with background for better visibility
+    start_y_features = y + h + 35  # Increased spacing
     feature_count = 0
-    for i, (feature_name, probability) in enumerate(features.items()):
-        # Only show features with probability >= 5%
+    
+    # Find the longest feature text to determine background width
+    max_width = 0
+    feature_texts = []
+    for feature_name, probability in features.items():
         if probability * 100 >= 5.0:
             feature_text = f"- {feature_name}: {probability*100:.1f}%"
-            current_y = start_y_features + (feature_count * 25)
-            cv2.putText(output_image, feature_text, (x, current_y), font, font_scale, feature_color, 1)
-            feature_count += 1
+            feature_texts.append(feature_text)
+            (text_width, _), _ = cv2.getTextSize(feature_text, font, font_scale, thickness)
+            max_width = max(max_width, text_width)
+    
+    # Draw feature labels with background
+    for i, feature_text in enumerate(feature_texts):
+        current_y = start_y_features + (i * 35)  # Increased spacing between lines
+        (_, text_height), _ = cv2.getTextSize(feature_text, font, font_scale, thickness)
+        cv2.rectangle(output_image, (x, current_y - text_height - 5), (x + max_width + 10, current_y + 10), (0, 0, 0), -1)
+        cv2.putText(output_image, feature_text, (x + 5, current_y), font, font_scale, feature_color, thickness)
 
     return output_image
 
@@ -104,6 +117,17 @@ def get_home_remedies(condition):
     Returns:
         str: Home remedies for the specified condition.
     """
+    # Map model feature names to remedies keys
+    condition_map = {
+        "darkspots": "dark_spots",
+        "puffy_eyes": "puffy_eyes",
+        "wrinkles": "wrinkles",
+        "clear_face": "clear_face"
+    }
+    
+    # Map the condition to the correct key
+    mapped_condition = condition_map.get(condition, condition)
+    
     remedies = {
         "wrinkles": "**Home Remedies for Wrinkles:**\n- Apply aloe vera gel daily\n- Use coconut oil as a moisturizer\n- Apply vitamin E oil before bed\n- Stay hydrated and use sunscreen\n- Try facial exercises",
         
@@ -114,4 +138,4 @@ def get_home_remedies(condition):
         "clear_face": "**Tips to Maintain Clear Skin:**\n- Follow a consistent cleansing routine\n- Stay hydrated with at least 8 glasses of water daily\n- Use non-comedogenic products\n- Exfoliate 1-2 times weekly\n- Protect skin with SPF 30+ sunscreen"
     }
     
-    return remedies.get(condition, "No specific remedies available for this condition.")
+    return remedies.get(mapped_condition, "No specific remedies available for this condition.")
