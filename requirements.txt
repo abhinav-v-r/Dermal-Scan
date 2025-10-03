@@ -1,6 +1,5 @@
 tensorflow
 opencv-python
-opencv-contrib-python
 pillow
 numpy
 matplotlib
