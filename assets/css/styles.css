@@ -12,9 +12,9 @@
     --warning-color: #FFC107;
     --error-color: #DC3545;
     --info-color: #17A2B8;
-    --text-primary: #2C3E50;
-    --text-secondary: #6C757D;
-    --text-muted: #868E96;
+    --text-primary: #111827;
+    --text-secondary: #374151;
+    --text-muted: #6B7280;
     --background-primary: #FFFFFF;
     --background-secondary: #F8F9FA;
     --background-tertiary: #E9ECEF;
@@ -42,6 +42,7 @@
     font-family: var(--font-family-primary);
     background: var(--background-secondary);
     min-height: 100vh;
+    color: var(--text-primary);
 }
 
 /* Main Content Area */
@@ -50,6 +51,17 @@
     padding-bottom: 3rem;
     max-width: 1200px;
 }
+
+/* Global Typography */
+.main h1, .main h2, .main h3, .main h4, .main h5, .main h6 {
+    color: var(--text-primary);
+    font-family: var(--font-family-heading);
+}
+.main p, .main li, .main span, .stMarkdown, .stMarkdown p, .stMarkdown li {
+    color: var(--text-primary) !important;
+}
+.main a { color: var(--primary-color); text-decoration: none; }
+.main a:hover { text-decoration: underline; }
 
 .main > div {
     padding-top: 0rem !important;
@@ -192,8 +204,8 @@ header {visibility: hidden;}
 }
 
 .card-content {
-    line-height: 1.6;
-    color: var(--text-secondary);
+    line-height: 1.7;
+    color: var(--text-primary);
 }
 
 /* Section Spacing */
@@ -331,9 +343,9 @@ header {visibility: hidden;}
 }
 
 .result-label {
-    color: var(--text-secondary);
+    color: var(--text-primary);
     font-weight: 500;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
 /* Progress Bars */
@@ -373,7 +385,7 @@ header {visibility: hidden;}
 }
 
 .advice-title {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-family-heading);
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 1rem;
@@ -382,23 +394,20 @@ header {visibility: hidden;}
     gap: 0.5rem;
 }
 
+/* Plain, readable bullets (no colored icons) */
 .advice-list {
-    list-style: none;
-    padding: 0;
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin: 0;
 }
 
 .advice-list li {
-    padding: 0.5rem 0;
-    padding-left: 1.5rem;
-    position: relative;
+    padding: 0.35rem 0;
+    position: static;
 }
 
 .advice-list li:before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: var(--accent-color);
-    font-weight: bold;
+    content: none;
 }
 
 /* Sample Images Grid */
@@ -479,42 +488,46 @@ header {visibility: hidden;}
     color: white;
 }
 
-/* Footer */
+/* Footer - refreshed light appearance */
 .footer {
-    background: var(--text-primary);
-    color: white;
-    padding: 2rem 0;
-    margin-top: 4rem;
-    text-align: center;
+    background: var(--background-primary);
+    color: var(--text-primary);
+    padding: 2.5rem 0;
+    margin-top: 3rem;
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
 }
 
 .footer-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.75rem;
+    margin-bottom: 1.5rem;
 }
 
 .footer-section h3 {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-family-heading);
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
 }
 
 .footer-section p, .footer-section a {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-secondary);
     text-decoration: none;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 .footer-section a:hover {
-    color: var(--accent-color);
+    color: var(--primary-color);
 }
 
 .footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    padding-top: 1rem;
-    opacity: 0.8;
+    border-top: 1px solid var(--border-color);
+    padding-top: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
 }
 
 /* Responsive Design */

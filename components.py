@@ -104,10 +104,11 @@ def render_sample_gallery():
                         image_path = os.path.join(sample_images_dir, filename)
                         try:
                             img = Image.open(image_path)
-                            st.image(img, caption=sample_descriptions.get(filename, filename), use_container_width=True)
-                            if st.button(f"Use this image", key=f"sample_{filename}", use_container_width=True):
+                            display_title = os.path.splitext(filename)[0].replace('_', ' ').replace('-', ' ').title()
+                            st.image(img, caption=display_title, use_container_width=True)
+                            if st.button("Use this image", key=f"sample_{filename}", use_container_width=True):
                                 st.session_state['sample_image'] = image_path
-                                st.success(f"✅ {filename} selected!")
+                                st.success(f"✅ {display_title} selected!")
                                 st.info("Go to Analysis page to process this image.")
                         except Exception as e:
                             st.error(f"Error loading {filename}: {str(e)}")
@@ -288,7 +289,7 @@ def render_about_section():
     st.markdown('<div class="content-card">', unsafe_allow_html=True)
     st.markdown('<h2 class="card-title">ℹ️ About DermalScan AI</h2>', unsafe_allow_html=True)
     
-    tab1, tab2, tab3 = st.tabs(["🔬 Technology", "📊 Performance", "🎯 Mission"])
+    tab1, tab2, tab3, tab4 = st.tabs(["🔬 Technology", "📊 Performance", "🎯 Mission", "👨‍💻 Developer"])
     
     with tab1:
         st.markdown("""
@@ -366,6 +367,21 @@ def render_about_section():
         - GDPR and HIPAA compliant processing
         - Transparent AI decision-making
         """)
+    
+    with tab4:
+        st.markdown("""
+        ### 👨‍💻 Developer
+        
+        **ABHINAV V R**
+        
+        - **Name:** Abhinav V R  
+        - **GitHub:** <a href="https://github.com/abhinav-v-r" target="_blank">github.com/abhinav-v-r</a>  
+        - **LinkedIn:** <a href="https://linkedin.com/in/abhinavvr" target="_blank">linkedin.com/abhinavvr</a>
+        
+        A passionate Computer Science Engineering student who loves building, learning and innovating with code. Currently working on AI-powered healthcare solutions and exploring the frontiers of deep learning and computer vision.
+        
+        Thank you for using DermalScan AI! If you like this project, feel free to connect or star the repository.
+        """, unsafe_allow_html=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -497,23 +513,24 @@ def render_footer():
     <div class="footer">
         <div class="footer-content">
             <div class="footer-section">
-                <h3>DermalScan AI</h3>
-                <p>Advanced AI-powered skin analysis platform combining cutting-edge technology with dermatological expertise.</p>
+                <h3>About</h3>
+                <p>DermalScan AI delivers professional-grade skin analysis and age prediction using advanced deep learning and computer vision.</p>
             </div>
             <div class="footer-section">
                 <h3>Technology</h3>
-                <p>• EfficientNetB0 Deep Learning<br>
-                • Computer Vision Processing<br>
-                • Real-time Analysis<br>
-                • Medical-grade Accuracy</p>
+                <p>
+                    EfficientNetB0 Architecture<br>
+                    Real-time Computer Vision<br>
+                    Streamlit-based UI
+                </p>
             </div>
             <div class="footer-section">
                 <h3>Disclaimer</h3>
-                <p>This tool provides educational insights only and should not replace professional medical advice. Consult a dermatologist for medical concerns.</p>
+                <p>This tool provides educational insights only and is not a substitute for professional medical advice. Please consult a dermatologist for medical concerns.</p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 DermalScan AI | Powered by EfficientNetB0 & Streamlit | Built with ❤️ for Better Skin Health</p>
+            <p>© 2025 DermalScan AI • Designed by <strong>Abhinav V R</strong> • Powered by EfficientNetB0 & Streamlit</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
