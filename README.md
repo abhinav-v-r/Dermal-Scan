@@ -7,10 +7,17 @@ An AI-powered application for analyzing facial skin aging signs using EfficientN
 ```
 Dermal-Scan/
 ├── app.py                          # Main Streamlit application
+├── components.py                   # UI components and rendering logic
 ├── requirements.txt                # Python dependencies
 ├── packages.txt                    # System packages
 ├── README.md                       # This file
-├── 
+├── test_enhanced.py               # Enhanced testing script
+│
+├── assets/                        # Static assets
+│   ├── css/
+│   │   └── styles.css             # Custom CSS styling
+│   └── images/                    # Static image assets
+│
 ├── src/                           # Source code directory
 │   ├── __init__.py
 │   ├── train_dermal_scan.py       # Comprehensive training pipeline
@@ -34,20 +41,35 @@ Dermal-Scan/
 ├── models/                        # Trained model files
 │   ├── dermal_scan_last.h5        # Feature classification model
 │   ├── age_pred.h5                # Age prediction model
-│   ├── old_models/                # Previous model versions
 │   ├── predict_age.py             # Age prediction utilities
 │   ├── predict_feature.py         # Feature prediction utilities
-│   └── test.py, test2.py          # Testing scripts
+│   ├── test.py                    # Model testing script
+│   ├── test2.py                   # Additional testing script
+│   └── old_models/                # Previous model versions
+│       ├── age_net.caffemodel     # Legacy Caffe model
+│       ├── dherma_ai_scan_v1.h5   # Previous H5 model version
+│       └── dherma_ai_scan_v1.keras # Previous Keras model version
 │
 ├── image_load/                    # Image loading and preprocessing
 │   ├── loader.py                  # Image loading utilities
 │   ├── preprocess.py              # Real-time image preprocessing
 │   ├── label.py                   # Labeling and annotation
-│   └── haarcascade_frontalface_default.xml
+│   └── haarcascade_frontalface_default.xml # OpenCV face detection cascade
 │
-├── logs/                          # Application logs
 ├── sample_images/                 # Sample test images
-└── outputs/                       # Training outputs (created during training)
+│   ├── acne.jpg
+│   ├── girl1.jpg
+│   ├── girl2.jpg
+│   ├── kid1.jpg
+│   ├── kid2.jpg
+│   ├── man1.jpg
+│   ├── man2.jpg
+│   ├── puffy_eye_man.jpg
+│   ├── srk.jpg
+│   └── woman.png
+│
+└── logs/                          # Application logs
+    └── dermal_scan_*.log          # Timestamped log files
 ```
 
 ## 🚀 Features
