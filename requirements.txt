@@ -4,7 +4,8 @@ pillow
 numpy
 matplotlib
 seaborn
-streamlit
+streamlit==1.26.0
+protobuf==3.20.3
 pandas
 opencv-python-headless
 scikit-learn
