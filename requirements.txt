@@ -1,11 +1,11 @@
 tensorflow
 opencv-python
-pillow
 numpy
 matplotlib
 seaborn
 streamlit==1.26.0
 protobuf==3.20.3
 pandas
-opencv-python-headless
 scikit-learn
+opencv-python-headless==4.12.0.88
+Pillow
