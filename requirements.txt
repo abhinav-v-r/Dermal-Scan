@@ -1,16 +1,14 @@
-# --- Core ML + Vision stack ---
-tensorflow==2.18.0
-opencv-python-headless==4.10.0.84
-numpy==1.26.4
+# --- ML + image stack ---
+tensorflow==2.20.0
+protobuf==5.28.3
+opencv-python-headless==4.12.0.88
+numpy==2.1.2
 pandas==2.2.3
 scikit-learn==1.5.2
-Pillow==10.3.0
+Pillow==12.0.0
 matplotlib==3.9.2
 seaborn==0.13.2
 
 # --- Streamlit stack ---
 streamlit==1.39.0
-protobuf==5.28.3
-
-# --- Optional utilities ---
 altair==5.5.0
