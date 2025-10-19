@@ -6,3 +6,5 @@ matplotlib
 seaborn
 streamlit
 pandas
+opencv-python-headless
+scikit-learn
